@@ -93,6 +93,8 @@ def main() -> None:
 
     print(f"\nFetched {fetched_total}, {len(all_rows)} matched title filter, "
           f"{new_count} new. {total} total jobs saved to {output}")
+    if new_count == 0:
+        print("No new jobs - Excel file left unchanged.")
 
 
 if __name__ == "__main__":

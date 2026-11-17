@@ -44,6 +44,10 @@ def merge_and_save(new_rows: list[dict], path: str | Path) -> tuple[int, int]:
         keys = _dedupe_key(new_df)
         new_df = new_df[~keys.isin(seen) & ~keys.duplicated()]
 
+    # Nothing new: leave the file untouched (avoids a no-op rewrite / git change)
+    if new_df.empty:
+        return 0, len(existing)
+
     combined = pd.concat([new_df, existing], ignore_index=True)  # newest first
     combined.to_excel(path, index=False, sheet_name="Jobs")
     _format(path)
