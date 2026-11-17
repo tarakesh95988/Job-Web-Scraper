@@ -1,0 +1,30 @@
+# Apify actor used to scrape LinkedIn jobs (https://apify.com/curious_coder/linkedin-jobs-scraper)
+actor_id: curious_coder/linkedin-jobs-scraper
+
+# Excel file that results are appended to (duplicates are skipped)
+output_file: jobs.xlsx
+
+# One or more searches. Each runs as a separate LinkedIn search.
+#   posted_within:    24h | week | month | any
+#   remote:           onsite | remote | hybrid | any
+#   experience_level: internship | entry | associate | mid-senior | director | executive | any
+#   max_results:      max jobs to fetch for this search
+#                     (Apify charges for every job fetched, including ones the
+#                      title filter drops)
+searches:
+  - keywords: "AI Engineer"
+    location: "United States"
+    posted_within: 24h
+    remote: any
+    experience_level: mid-senior
+    max_results: 10
+
+# Only jobs whose title contains one of these phrases are saved.
+# Whole-word match, ignores case, a hyphen counts as a space.
+#   "AI Engineer" matches: AI Engineer, Senior AI Engineer, Gen AI Engineer,
+#                          Generative AI Engineer, Lead AI Engineer
+#   It does NOT match:     ML Engineer, AI/ML Engineer, Engineer, AI
+# Remove this list (or leave it empty) to keep every job.
+title_include:
+  - "AI Engineer"
+  - "GenAI Engineer"

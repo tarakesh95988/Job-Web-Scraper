@@ -1,0 +1,7 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+jobs.xlsx
+test_jobs.xlsx
+~$*.xlsx
