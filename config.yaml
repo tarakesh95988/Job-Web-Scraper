@@ -20,7 +20,7 @@ searches:
     remote: any
     experience_level: mid-senior
     job_type: full-time
-    max_results: 100
+    max_results: 5
 
 # Only jobs whose title contains one of these phrases are saved.
 # Whole-word match, ignores case, a hyphen counts as a space.
