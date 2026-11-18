@@ -3,4 +3,5 @@ __pycache__/
 *.pyc
 .venv/
 test_jobs.xlsx
+jobs.xlsx
 ~$*.xlsx
