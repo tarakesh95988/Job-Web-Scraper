@@ -8,6 +8,8 @@ output_file: jobs.xlsx
 #   posted_within:    24h | week | month | any
 #   remote:           onsite | remote | hybrid | any
 #   experience_level: internship | entry | associate | mid-senior | director | executive | any
+#   job_type:         full-time | part-time | contract | temporary | internship | any
+#                     (added to the search text, and jobs of any other type are dropped)
 #   max_results:      max jobs to fetch for this search
 #                     (Apify charges for every job fetched, including ones the
 #                      title filter drops)
@@ -17,6 +19,7 @@ searches:
     posted_within: 24h
     remote: any
     experience_level: mid-senior
+    job_type: full-time
     max_results: 100
 
 # Only jobs whose title contains one of these phrases are saved.

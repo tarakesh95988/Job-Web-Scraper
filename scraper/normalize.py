@@ -76,6 +76,20 @@ def filter_by_title(rows: list[dict], include: list[str]) -> list[dict]:
     return [r for r in rows if any(p.search(str(r["Job Title"])) for p in patterns)]
 
 
+def _type_key(value) -> str:
+    """'Full-time', 'Full Time', 'FULL_TIME' -> 'fulltime'."""
+    return re.sub(r"[\s\-_]", "", str(value).lower())
+
+
+def filter_by_employment_type(rows: list[dict], job_type) -> list[dict]:
+    """Keep rows whose Employment Type matches `job_type` (e.g. "full-time").
+    'any' or blank keeps everything. Jobs with no employment type are dropped."""
+    if job_type is None or str(job_type).strip().lower() in ("", "any"):
+        return rows
+    wanted = _type_key(job_type)
+    return [r for r in rows if _type_key(r["Employment Type"]) == wanted]
+
+
 def normalize_job(item: dict, search_label: str, scraped_at: datetime) -> dict:
     row = {col: _first(item, keys) for col, keys in FIELD_KEYS.items()}
     job_id = extract_job_id(item, str(row["Job Link"]))

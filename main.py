@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 
 from scraper.apify_client_wrapper import build_run_input, run_actor
 from scraper.excel_writer import merge_and_save
-from scraper.normalize import filter_by_title, normalize_job
+from scraper.normalize import filter_by_employment_type, filter_by_title, normalize_job
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -73,12 +73,13 @@ def main() -> None:
             print(f"  Raw keys: {sorted(items[0].keys())}")
         rows = [normalize_job(item, label, scraped_at) for item in items]
         kept = filter_by_title(rows, title_include)
+        kept = filter_by_employment_type(kept, search.get("job_type"))
         fetched_total += len(rows)
-        print(f"  Fetched {len(rows)} jobs, {len(kept)} match title filter")
+        print(f"  Fetched {len(rows)} jobs, {len(kept)} match title/job type filters")
         if args.debug:
             for r in rows:
                 if r not in kept:
-                    print(f"    dropped: {r['Job Title']}")
+                    print(f"    dropped: {r['Job Title']} ({r['Employment Type'] or 'no type'})")
         all_rows.extend(kept)
 
     if not all_rows:
@@ -91,7 +92,7 @@ def main() -> None:
     except PermissionError:
         sys.exit(f"Cannot write {output.name} - close it in Excel and run again.")
 
-    print(f"\nFetched {fetched_total}, {len(all_rows)} matched title filter, "
+    print(f"\nFetched {fetched_total}, {len(all_rows)} matched filters, "
           f"{new_count} new. {total} total jobs saved to {output}")
     if new_count == 0:
         print("No new jobs - Excel file left unchanged.")

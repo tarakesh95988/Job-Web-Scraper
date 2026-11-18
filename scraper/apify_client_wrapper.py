@@ -5,7 +5,9 @@ or its own "AI search" filter fields. We use the filter fields and leave `urls` 
 
 Since Aug 2026 LinkedIn's AI job search no longer supports experience level, job type
 or workplace filters; LinkedIn recommends putting them in the search text instead.
-So `experience_level` and `remote` are appended to the keywords.
+So `experience_level`, `remote` and `job_type` are appended to the keywords.
+Since that is only a hint, main.py also drops results whose employment type
+doesn't match `job_type`.
 """
 from apify_client import ApifyClient
 
@@ -18,6 +20,13 @@ EXPERIENCE = {
     "mid-senior": "mid-senior level",
     "director": "director",
     "executive": "executive",
+}
+JOB_TYPE = {
+    "full-time": "full-time",
+    "part-time": "part-time",
+    "contract": "contract",
+    "temporary": "temporary",
+    "internship": "internship",
 }
 
 
@@ -34,10 +43,11 @@ def _lookup(mapping: dict, value, field: str):
 
 
 def build_keywords(search: dict) -> str:
-    """Search text: keywords plus experience level / workplace as plain words."""
+    """Search text: keywords plus experience level / workplace / job type as plain words."""
     parts = [str(search.get("keywords", "")).strip()]
     parts.append(_lookup(EXPERIENCE, search.get("experience_level"), "experience_level"))
     parts.append(_lookup(REMOTE, search.get("remote"), "remote"))
+    parts.append(_lookup(JOB_TYPE, search.get("job_type"), "job_type"))
     return " ".join(p for p in parts if p)
 
 
